@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+.container {
+    width: 1270px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+body {
+    background: #f5f5f5;
+}
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
