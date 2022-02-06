@@ -11,10 +11,16 @@
                         name=""
                         id=""
                         autofocus="autofocus"
+                        v-model="newTodoContent"
+                        @keyup.enter="addTodo"
                     />
                 </div>
                 <div class="todolist">
-                    <TodoItem />
+                    <TodoItem
+                        v-for="(todo, index) in todos"
+                        :key="index"
+                        :todo="todo"
+                    />
                 </div>
                 <div class="todofoot"></div>
             </div>
@@ -27,6 +33,7 @@ import TodoItem from "../components/TodoItem.vue";
 export default {
     data() {
         return {
+            newTodoContent: "",
             todos: [
                 {
                     id: 1,
@@ -42,6 +49,17 @@ export default {
         };
     },
     components: { TodoItem },
+
+    methods: {
+        addTodo() {
+            this.todos.push({
+                id: this.todos.length + 1,
+                content: this.newTodoContent,
+                completed: false,
+            });
+            this.newTodoContent = "";
+        },
+    },
 };
 </script>
 
@@ -56,6 +74,7 @@ export default {
         margin: 30px auto;
         border-radius: 10px;
         overflow: hidden;
+        padding: 10px;
 
         .todotop {
             display: flex;
