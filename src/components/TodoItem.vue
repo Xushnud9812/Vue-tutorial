@@ -3,21 +3,26 @@
         <div class="flex">
             <div class="checkbox">
                 <label for="">
-                    <input type="checkbox" />
+                    <input
+                        type="checkbox"
+                        :checked="todo.completed"
+                        @change="checkboxChange"
+                    />
                 </label>
             </div>
-            <div class="todoContent">
-                <span v-if="isEdit == false" @dblclick="isEdit = true">
-                    {{ todo.content }}</span
-                >
+            <div class="todoContent" :class="{ line: todo.completed }">
                 <input
                     v-if="isEdit"
-                    @blur="isEdite = false"
+                    @blur="deactive"
+                    ref="input"
                     type="text"
-                    v-model="todo.content"
+                    v-model="newTodoContent"
+                    @keyup.esc="deactive"
+                    @keyup.enter="todoContentChange"
                 />
+                <span v-else @dblclick="activeInput"> {{ todo.content }}</span>
             </div>
-            <button class="delete">x</button>
+            <button @click="deleteTodo" class="delete">x</button>
         </div>
     </div>
 </template>
@@ -28,6 +33,7 @@ export default {
     data() {
         return {
             isEdit: false,
+            newTodoContent: "",
         };
     },
 
@@ -36,11 +42,40 @@ export default {
             type: Object,
         },
     },
+    methods: {
+        checkboxChange() {
+            this.$emit("checked-change");
+        },
+        activeInput() {
+            this.isEdit = true;
+            this.newTodoContent = this.todo.content;
+            this.$nextTick(() => {
+                this.$refs.input.focus();
+            });
+        },
+        deleteTodo() {
+            this.$emit("deleteItemTodo");
+        },
+        deactive() {
+            this.isEdit = false;
+        },
+        todoContentChange() {
+            this.$emit("edit", this.newTodoContent);
+            this.isEdit = false;
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
 .todoitems {
+    border-bottom: 1px solid rgb(236, 219, 219);
+    .line {
+        span {
+            text-decoration: line-through;
+            color: gray;
+        }
+    }
     .flex {
         button.delete {
             background: transparent;
